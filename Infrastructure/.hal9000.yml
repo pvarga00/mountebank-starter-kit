@@ -1,0 +1,24 @@
+platform: 'linux'
+image: 'iac'
+
+env:
+  global:
+    AWS_DEFAULT_REGION: 'us-east-2'
+
+  beta-aws:
+    AWS_ACCOUNT: '842981125669'
+    
+build: |
+  tf12_modules=("vpc" "ecr-user" "ecs-app" "apigw")
+  if [[ " ${tf12_modules[@]} " =~ " ${HAL_METADATA_MODULE} " ]]; then
+      plan-terraform-v3
+  else
+      plan-terraform-v2
+  fi
+deploy: |
+  tf12_modules=("vpc" "ecr-user" "ecs-app" "apigw")
+  if [[ " ${tf12_modules[@]} " =~ " ${HAL_METADATA_MODULE} " ]]; then
+      apply-terraform-v3
+  else
+      apply-terraform-v2
+  fi

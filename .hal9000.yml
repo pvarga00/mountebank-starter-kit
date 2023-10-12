@@ -1,0 +1,17 @@
+platform: 'linux'
+image: 'awscli'
+
+env:
+    beta-aws:
+        HAL_ECS_CLUSTER: 'beta-ecscluster-842981125669-us-east-2'
+        HAL_ECS_TASK: 'beta-999999-pepmb'
+        HAL_IMAGE_URL: '${AWS_ACCOUNT}.dkr.ecr.us-east-2.amazonaws.com/beta-999999-pepmb:${HAL_COMMIT}'
+        HAL_TASK_DEFINITION_NAME: 'beta-999999-pepmb'
+
+deploy:
+    - sed -i '/jessie-updates/d' /etc/apt/sources.list
+    - 'apt-get update'
+    - 'pip install awscli --upgrade'
+    - 'sed -i -e "s~\${TASK_NAME}~$HAL_ECS_TASK~; s~\${ECR_URL}~$HAL_IMAGE_URL~; s~\${TASK_ENV}~$HAL_RUN_ENV~; s~\${TASK_REGION}~$HAL_CONTEXT~" task.json'
+    - 'aws ecs register-task-definition --cli-input-json file://task.json --region $HAL_CONTEXT --family $HAL_ECS_TASK'
+    - 'aws ecs update-service --cluster $HAL_ECS_CLUSTER --service $HAL_ECS_TASK --task-definition $HAL_TASK_DEFINITION_NAME --region $HAL_CONTEXT'

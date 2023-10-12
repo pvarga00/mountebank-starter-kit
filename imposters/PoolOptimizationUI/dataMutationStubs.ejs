@@ -1,0 +1,23 @@
+{
+    "responses": [{"inject": "<%- stringify(filename, 'PoolOptimizationUI/dataMutationResponse.js') %>"}],
+    "predicates": [{
+        "or": [
+            {
+                "equals": {
+                    "path": "/PoolOptimizationUI/createValuation",
+                    "method": "POST"
+                }
+            },
+            {
+                "equals": {
+                    "path": "/PoolOptimizationUI/updateValuation",
+                    "method": "PUT"
+                }
+            }
+        ]
+    }]
+}
+
+
+
+

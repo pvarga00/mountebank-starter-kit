@@ -1,0 +1,100 @@
+attach_workspace: &attach_workspace
+    attach_workspace:
+        at: '.'
+
+persist_workspace: &persist_workspace
+    persist_to_workspace:
+        root: '.'
+        paths: [ '.' ]
+
+persist_hal_build_id_to_workspace: &persist_hal_build_id_to_workspace
+    persist_to_workspace:
+        root: '.'
+        paths: [ '.hal_build_id' ]
+
+bash_setup_step: &bash_setup_step
+  run:
+    name: Install bash and curl
+    command: |
+      apk update
+      apk add -y curl
+      apk add -y bash
+      apk update
+      apk upgrade
+
+enterprise_setup: &enterprise_setup
+    run:
+        name: 'Prepare Enterprise Setup'
+        command: 'curl -sL "https://tools.circleci.foc.zone/install-certs" | bash -'
+
+deploy_nonprod_job: &deploy_nonprod_job
+    working_directory: '~/project'
+    docker: [ {image: 'qldockerdtr.rockfin.com/circleci/hal-integration:hal-publisher'} ]
+    steps:
+        - *attach_workspace
+        - run: 'deploy-to-hal-passive-only'
+
+version: 2
+
+jobs:
+    build:
+        working_directory: '~/build'
+        docker:
+            - image: qldockerdtr.rockfin.com/krobertson1/circle-ecr
+        environment:
+            CIRCLE_DOCKER_IMAGE_NAME: mountebank
+            CIRCLE_ECR_URL: 468897494927.dkr.ecr.us-east-2.amazonaws.com/beta-999999-finexmb
+            CIRCLE_AWS_REGION: us-east-2 
+            
+        steps:
+            - checkout
+            - setup_remote_docker:
+                docker_layer_caching: true
+            - *bash_setup_step
+            - *enterprise_setup
+            - run:
+                name: Build Docker Container
+                command: |
+                    ls
+                    docker build -t $CIRCLE_DOCKER_IMAGE_NAME .
+            - deploy:
+                name: Push Docker Image to BETA
+                command: |
+                    # Login to ECR - Tag and push docker image to ECR repo
+                    aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY_NP
+                    aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID_NP
+                    eval $(aws ecr get-login --region $CIRCLE_AWS_REGION)
+                    docker tag $CIRCLE_DOCKER_IMAGE_NAME:latest $CIRCLE_ECR_URL:$CIRCLE_SHA1
+                    docker push $CIRCLE_ECR_URL:$CIRCLE_SHA1
+            - *persist_workspace
+
+    publish_build_to_hal:
+        working_directory: '~/build'
+        docker: [ {image: 'qldockerdtr.rockfin.com/circleci/hal-integration:hal-publisher'} ]
+        environment:
+            HAL_APP_ID: '3692'
+            HAL_ARTIFACT_PATH: ''
+        steps:
+            - *attach_workspace
+            - store_artifacts: { path: '~/build' }
+            - run: 'publish-build-to-hal'
+            - *persist_hal_build_id_to_workspace
+
+    deploy_beta:
+        <<: *deploy_nonprod_job
+        environment:
+            HAL_TARGETS: '18492'  
+
+workflows:
+    version: 2
+    pipeline:
+        jobs:
+            - build:
+                filters:
+                  branches:
+                    only:
+                     - master
+            - publish_build_to_hal:
+                requires: [ build ]
+            - deploy_beta:
+                requires: [ publish_build_to_hal ]

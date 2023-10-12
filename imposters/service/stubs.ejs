@@ -1,0 +1,31 @@
+{
+    "responses": [{"inject": "<%- stringify(filename, 'service/successResponse.js') %>"}],
+    "predicates": [{
+        "or": [
+            {
+                "equals": {
+                    "path": "/api/health",
+                    "method": "GET"
+                }
+            },
+            {
+                "equals": {
+                    "path": "/health",
+                    "method": "GET"
+                }
+            },
+            {
+                "equals": {
+                    "path": "/test",
+                    "method": "GET"
+                }
+            },
+            {
+                "equals": {
+                    "path": "/getValuations3",
+                    "method": "GET"
+                }
+            }
+        ]
+    }]
+}

@@ -1,0 +1,17 @@
+{
+    "predicates": [{
+        "and":[
+            {
+                "equals": {
+                    "method": "GET"
+                }
+            },
+            {
+                "equals": {
+                    "path": "/NICE/ClientLogin"
+                }
+            }
+        ]
+    }],
+    "responses": [{"inject": "<%- stringify(filename, 'Nice/response.js') %>"}]
+}

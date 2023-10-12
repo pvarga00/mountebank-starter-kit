@@ -1,0 +1,20 @@
+{
+    "imposters": [
+        {
+            "port": 80,
+            "allowCORS" : true,
+            "protocol": "http",
+            "name": "Service HTTP Mocking",
+            "stubs": [
+                <% include PoolOptimizationUI/valuationStubs.ejs %>,
+                <% include PoolOptimizationUI/dataMutationStubs.ejs %>,
+                <% include PoolOptimizationUI/bookStubs.ejs %>,
+                <% include PoolOptimizationUI/optimizationProgressStubs.ejs %>,
+                <% include service/stubs.ejs %>,
+                <% include Nice/stubs.ejs %>,
+                <% include Defaults/stubs.ejs %>
+            ]
+        }
+    ]
+}
+

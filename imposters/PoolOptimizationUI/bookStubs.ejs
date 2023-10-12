@@ -1,0 +1,13 @@
+{
+    "responses": [{"inject": "<%- stringify(filename, 'PoolOptimizationUI/bookResponse.js') %>"}],
+    "predicates": [{
+        "or": [
+            {
+                "equals": {
+                    "path": "/PoolOptimizationUI/getBooks",
+                    "method": "GET"
+                }
+            }
+        ]
+    }]
+}

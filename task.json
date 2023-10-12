@@ -1,0 +1,25 @@
+{
+  "containerDefinitions": [
+      {
+      "name": "${TASK_NAME}",
+      "image": "${ECR_URL}",
+      "cpu": 512,
+      "memory": 256,
+      "essential": true,
+      "portMappings": [
+          {
+              "containerPort": 80,
+              "hostPort": 0
+          }
+          ],
+      "logConfiguration": {
+          "logDriver": "awslogs",
+          "options": {
+             "awslogs-group": "${TASK_NAME}",
+             "awslogs-region": "${TASK_REGION}",
+             "awslogs-stream-prefix": "mountebank"
+          }
+        }
+      }
+  ]
+}

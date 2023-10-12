@@ -1,0 +1,128 @@
+{
+    "predicates": [
+            {"contains": {
+                    "path": "/PoolOptimizationUI/getOptimizationProgress",
+                    "method": "GET"
+                }
+            }
+    ],
+    "responses": [
+    {
+          "is": {
+            "statusCode": 201,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+            "optimizationValuationBatchID": 123456,
+            "progressPercentage": 0,
+            "status": "Created"
+            }
+          }
+        },
+        {
+        "is": {
+            "statusCode": 201,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+            "optimizationValuationBatchID": 123456,
+            "progressPercentage": 0,
+            "status": "Created"
+            }
+          }
+        }, 
+        {
+          "is": {
+            "statusCode": 201,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+            "optimizationValuationBatchID": 123456,
+            "progressPercentage": 10,
+            "status": "Running"
+            }
+          }
+        }, 
+        {
+          "is": {
+            "statusCode": 201,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+            "optimizationValuationBatchID": 123456,
+            "progressPercentage": 20,
+            "status": "Running"
+            }
+          }
+        }, 
+        {
+          "is": {
+            "statusCode": 201,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+            "optimizationValuationBatchID": 123456,
+            "progressPercentage": 40, 
+            "status": "Running"
+            }
+          }
+        }, 
+        {
+          "is": {
+            "statusCode": 201,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+            "optimizationValuationBatchID": 123456,
+            "progressPercentage": 70, 
+            "status": "Running"
+            }
+          }
+        }, 
+        {
+          "is": {
+            "statusCode": 201,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+            "optimizationValuationBatchID": 123456,
+            "progressPercentage": 95, 
+            "status": "Running"
+            }
+          }
+        }, 
+        {
+          "is": {
+            "statusCode": 201,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+            "optimizationValuationBatchID": 123456,
+            "progressPercentage": 100, 
+            "status": "Running"
+            }
+          }
+        }, 
+         {
+          "is": {
+            "statusCode": 201,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+            "optimizationValuationBatchID": 123456,
+            "progressPercentage": 100, 
+            "status": "Finished"
+            }
+          }
+        }
+      ]
+}
